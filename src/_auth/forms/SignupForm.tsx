@@ -19,7 +19,10 @@ import { Loader } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createUserAccount } from "@/lib/supabase/api";
 
+import { useToast } from "@/hooks/use-toast";
+
 const SignupForm = () => {
+  const { toast } = useToast();
   const isLoading = false;
 
   const form = useForm<z.infer<typeof SignupValidation>>({
@@ -34,6 +37,14 @@ const SignupForm = () => {
 
   async function onSubmit(values: z.infer<typeof SignupValidation>) {
     const newUser = await createUserAccount(values);
+
+    if (!newUser) {
+      return toast({
+        title: "Sign Up failed. Try again.",
+      });
+    }
+
+    console.log("YO!");
     console.log(newUser);
   }
 
